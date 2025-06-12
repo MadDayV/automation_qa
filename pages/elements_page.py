@@ -4,7 +4,8 @@ import random
 from selenium.webdriver.common.by import By
 
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, WebTablePageLocators
+from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, WebTablePageLocators, \
+    RadioButtonPageLocators, ButtonsPageLocators
 from pages.base_page import BasePage
 
 
@@ -63,6 +64,19 @@ class CheckBoxPage(BasePage):
         for item in result_list:
             data.append(item.text)
         return str(data).replace(' ','').lower()
+
+
+class RadioButtonPage(BasePage):
+    locators = RadioButtonPageLocators()
+
+    def click_on_the_radio_button(self, choice):
+        choices = {'yes': self.locators.YES_RADIOBUTTON,
+                   'impressive': self.locators.IMPRESSIVE_RADIOBUTTON,
+                   'no': self.locators.NO_RADIOBUTTON}
+        self.element_is_visible(choices[choice]).click()
+
+    def get_output_result(self):
+        return self.element_is_present(self.locators.OUTPUT_RESULT).text
 
 
 class WebTablePage(BasePage):
@@ -133,3 +147,23 @@ class WebTablePage(BasePage):
     def check_count_rows(self):
         list_rows = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
         return len(list_rows)
+
+
+class ButtonsPage(BasePage):
+
+    locators = ButtonsPageLocators()
+
+    def click_on_different_button(self, type_click):
+        if type_click == "double":
+            self.action_double_click(self.element_is_visible(self.locators.DOUBLE_BUTTON))
+            return self.check_clicked_on_the_button(self.locators.SUCCESS_DOUBLE)
+        if type_click == "right":
+            self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
+            return self.check_clicked_on_the_button(self.locators.SUCCESS_RIGHT)
+        if type_click == "click":
+            self.element_is_visible(self.locators.CLICK_ME_BUTTON).click()
+            return self.check_clicked_on_the_button(self.locators.SUCCESS_CLICK_ME)
+
+
+    def check_clicked_on_the_button(self, element):
+        return self.element_is_present(element).text
