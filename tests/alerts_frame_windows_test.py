@@ -1,6 +1,7 @@
 import time
 
-from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage
+from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage, \
+    ModalDialogsPage
 from conftest import driver
 
 
@@ -20,7 +21,6 @@ class TestAlertsFrameWindow:
             text_result = browser_windows_page.check_opened_new_tab()
             assert text_result == 'This is a sample page', "the window has not opened or incorrect window has been opened"
 
-
     class TestAlertsPage:
 
         def test_see_alert(self, driver):
@@ -29,20 +29,17 @@ class TestAlertsFrameWindow:
             alert_text = alert_page.check_see_alert()
             assert alert_text == 'You clicked a button', "Alert didn't show up"
 
-
         def test_alert_appear_5_sec(self, driver):
             alert_page = AlertsPage(driver, 'https://demoqa.com/alerts')
             alert_page.open()
             alert_text = alert_page.check_alert_appear_5_sec()
             assert alert_text == 'This alert appeared after 5 seconds', "Alert didn't show up"
 
-
         def test_confirm_alert(self, driver):
             alert_page = AlertsPage(driver, 'https://demoqa.com/alerts')
             alert_page.open()
             alert_text = alert_page.check_confirm_alert()
             assert alert_text == 'You selected Ok', "Alert didn't show up"
-
 
         def test_prompt_alert(self, driver):
             alert_page = AlertsPage(driver, 'https://demoqa.com/alerts')
@@ -60,7 +57,6 @@ class TestAlertsFrameWindow:
             assert result_frame1 == ['This is a sample page', '500px', '350px'], 'The frame does not exist'
             assert result_frame2 == ['This is a sample page', '100px', '100px'], 'The frame does not exist'
 
-
     class TestNestedFramesPage:
 
         def test_nested_frames(self, driver):
@@ -69,3 +65,14 @@ class TestAlertsFrameWindow:
             parent_text, child_text = nested_frame_page.check_nested_frame()
             assert parent_text == 'Parent frame', 'Nested frame does not exist'
             assert child_text == 'Child Iframe', 'Nested frame does not exist'
+
+    class TestModalDialogsPage:
+
+        def test_modal_dialogs(self, driver):
+            modal_dialogs_page = ModalDialogsPage(driver, 'https://demoqa.com/modal-dialogs')
+            modal_dialogs_page.open()
+            small, large = modal_dialogs_page.check_modal_dialogs()
+            assert small[1] < large[1], 'text from large dialog is less than text from small dialog'
+            assert small[0] == 'Small Modal', 'The header is not "Small Modal"'
+            assert large[0] == 'Large Modal', 'The header is not "Large Modal"'
+
