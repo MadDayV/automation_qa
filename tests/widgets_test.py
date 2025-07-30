@@ -1,7 +1,7 @@
 import time
 from idlelib.autocomplete import AutoComplete
 
-from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage
+from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage
 from conftest import driver
 
 
@@ -60,3 +60,18 @@ class TestDatePickerPage:
         print(value_date_before)
         print(value_date_after)
         assert value_date_before != value_date_after, 'the date and time have not been changed'
+
+class TestSliderPage:
+    def test_slider(self,driver):
+        slider = SliderPage(driver, 'https://demoqa.com/slider')
+        slider.open()
+        before, after = slider.change_slider_value()
+        assert before != after, 'the slider value has not been changed'
+
+
+class TestProgressBarPage:
+    def test_progress_bar(self, driver):
+        progress_bar = ProgressBarPage(driver, 'https://demoqa.com/progress-bar')
+        progress_bar.open()
+        before, after = progress_bar.change_progress_bar_value()
+        assert before != after, 'the progress bar value has not been changed'
